@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DocuMentor</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 760px; margin: 40px auto; padding: 0 16px; color: #17202a; }
+    form { display: grid; gap: 12px; padding: 20px; border: 1px solid #d8dee4; border-radius: 12px; }
+    input, button { padding: 10px; font-size: 16px; border-radius: 8px; border: 1px solid #aab4bf; }
+    button { background: #0b5fff; color: white; border: 0; cursor: pointer; }
+    #result { margin-top: 24px; white-space: pre-wrap; }
+    .error { color: #b3261e; }
+  </style>
+</head>
+<body>
+  <h1>DocuMentor</h1>
+  <p>Upload a text-based PDF and generate a grounded study guide.</p>
+  <form id="form">
+    <label>PDF file<input type="file" name="file" accept="application/pdf" required /></label>
+    <label>Study topic<input name="topic" placeholder="e.g. photosynthesis" required minlength="3" /></label>
+    <button type="submit">Generate guide</button>
+  </form>
+  <div id="result"></div>
+  <script>
+    const form = document.getElementById("form");
+    const result = document.getElementById("result");
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      result.className = "";
+      result.textContent = "Generating...";
+      const data = new FormData(form);
+      try {
+        const response = await fetch("/api/guides", { method: "POST", body: data });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.detail || "Request failed");
+        result.textContent = JSON.stringify(payload, null, 2);
+      } catch (error) {
+        result.className = "error";
+        result.textContent = error.message;
+      }
+    });
+  </script>
+</body>
+</html>
