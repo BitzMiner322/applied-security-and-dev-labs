@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "quantpilot": {
+      "url": "https://quantpilot.com",
+      "description": "QuantPilot MCP Server for QuantScript v2 validation and Hyperliquid 1m backtesting"
+    }
+  }
+}
